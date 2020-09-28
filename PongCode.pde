@@ -1,5 +1,5 @@
 float moveY1 = 400;    // save point of player1's paddle 
-float moveY2 = 400;    // save point of player2's paddle 
+float moveY2 = 400;    // save point of player2's paddle
 
 PongGame game;
 PongBall ball;
@@ -42,13 +42,19 @@ void draw() {
   player2.drawPaddle();    // call PongPaddle method
   
   if(ball.pntX - 25 < 0){    // if the ball out of screen at left side, start at default position
-    ball.stepX = 5;
-    ball.pntX = 500;
+    game.score2 += 1;    // if out left, player2 get 1 point
+    ball.stepX = 5;    // set stepX to default
+    game.speed = 5;    // set speed to default
+    game.hitStack = 0;    // set hit stack to 0
+    ball.pntX = 500;    
     ball.pntY = 400;
   }
   
   if(ball.pntX + 25 > 1000){    // if the ball out of screen at right side, start at default position
-    ball.stepX = 5;
+    game.score1 += 1;    // if out right, player2 get 1 point
+    ball.stepX = 5;    // set stepX to default
+    game.speed = 5;    // set speed to default
+    game.hitStack = 0;    // set hit stack to 0
     ball.pntX = 500;
     ball.pntY = 400;
   }
@@ -64,12 +70,18 @@ void draw() {
   // if the ball hit the left paddle, bounce by reverse direction in X axis
   if( ball.pntX-25 < player1.cenX+12.5 && ball.pntY+25 > player1.cenY-100 && ball.pntY-25 < player1.cenY+100){
     ball.vx *= -1;    // flip horizonal
+    ball.stepX += 0.5;    // increase distance after hit paddle (ball will move faster)
+    game.speed += 0.5;    // report speed after hit paddle
+    game.hitStack += 1;    // report hit stack
     ball.stepY = random(-5,5);    // when hit paddle, stepY won't flip 100% in vertical
   }
   
   // if the ball hit the right paddle, bounce by reverse direction in X axis
   if( ball.pntX+25 > player2.cenX-12.5 && ball.pntY+25 > player2.cenY-100 && ball.pntY-25 < player2.cenY+100){
     ball.vx *= -1;    // flip horizonal
+    ball.stepX += 0.5;    // increase distance after hit paddle (ball will move faster)
+    game.speed += 0.5;    // report speed after hit paddle
+    game.hitStack += 1;    // report hit stack
     ball.stepY = random(-5,5);    // when hit paddle, stepY won't flip 100% in vertical
   }
   
@@ -81,6 +93,11 @@ class PongGame {    // game running class
   int score1 = 0;
   int score2 = 0;
   PFont f = createFont("Arial", 16, true);
+  float dragY1;
+  float dragY2;
+  float hitStack = 0;
+  float speed = 5;
+  
   
   void update() {
     
@@ -95,7 +112,23 @@ class PongGame {    // game running class
     textFont(f, 100);
     textAlign(CENTER);
     text(score2, 750, 100);
-
+    
+    // report label
+    fill(255);
+    rectMode(CENTER);
+    rect(500, 175, 200, 150);
+    
+    // speed report
+    fill(0);
+    textFont(f, 20);
+    textAlign(CENTER);
+    text("Speed "+str(speed), 500, 150);
+    
+    // hit stack report
+    fill(0);
+    textFont(f, 20);
+    textAlign(CENTER);
+    text("Hit Stack "+str(hitStack), 500, 200);
   }
 }
 
