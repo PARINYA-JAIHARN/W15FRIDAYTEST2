@@ -6,6 +6,7 @@ PongBall ball;
 PongPaddle player1;
 PongPaddle player2;
 
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 void mouseMoved() {    //add move event
   if (0 < mouseX && mouseX < 500) {    // left side
@@ -93,8 +94,6 @@ class PongGame {    // game running class
   int score1 = 0;
   int score2 = 0;
   PFont f = createFont("Arial", 16, true);
-  float dragY1;
-  float dragY2;
   float hitStack = 0;
   float speed = 5;
   
